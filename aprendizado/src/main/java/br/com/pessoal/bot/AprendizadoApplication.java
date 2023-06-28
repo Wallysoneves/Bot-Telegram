@@ -1,4 +1,4 @@
-package br.com.pessoal.aprendizado;
+package br.com.pessoal.bot;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +12,7 @@ public class AprendizadoApplication {
 	public static void main(String[] args) {
 
 		SpringApplication app = new SpringApplication(AprendizadoApplication.class);
-		app.setBannerMode(Banner.Mode.CONSOLE); // Configura o modo do banner para exibir no console
+		app.setBannerMode(Banner.Mode.CONSOLE);
 		app.run(args);
 	}
 
