@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.pessoal</groupId>
-	<artifactId>aprendizado</artifactId>
+	<artifactId>bot-telegram</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>aprendizado</name>
+	<name>bot-telegram</name>
 	<description>na intenção de aprender e aprimorar meus conhecimentos</description>
 	<properties>
 		<java.version>11</java.version>
