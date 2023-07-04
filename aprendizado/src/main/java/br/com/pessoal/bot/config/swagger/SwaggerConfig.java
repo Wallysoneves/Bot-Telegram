@@ -1,4 +1,4 @@
-package br.com.pessoal.aprendizado.config.swagger;
+package br.com.pessoal.bot.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

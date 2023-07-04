@@ -1,15 +1,25 @@
-package br.com.pessoal.aprendizado.service;
+package br.com.pessoal.bot.service;
 
-import br.com.pessoal.aprendizado.config.cache.CacheTelegram;
-import br.com.pessoal.aprendizado.model.dto.Properties;
+import br.com.pessoal.bot.config.cache.CacheTelegram;
+import br.com.pessoal.bot.model.Integracao;
+import br.com.pessoal.bot.model.dto.ParametroEntrada;
+import br.com.pessoal.bot.model.dto.Properties;
+import br.com.pessoal.bot.model.dto.SendMessage;
+import br.com.pessoal.bot.repository.IntegracaoDaoJpa;
+import br.com.pessoal.bot.rotas.TelegramRotas;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class ChatService {
@@ -20,9 +30,15 @@ public class ChatService {
     @Autowired
     private CacheTelegram cacheTelegram;
 
-    public Object getUpdate() {
+    @Autowired
+    private TelegramRotas telegramRotas;
 
-        String url = String.format("%s%s/getUpdates", properties.getUrl(), cacheTelegram.buscarToken());
+    @Autowired
+    private IntegracaoDaoJpa integracaoDaoJpa;
+
+    public Object getUpdate(ParametroEntrada parametroEntrada) {
+
+        String url = String.format("%s%s/getUpdates", properties.getUrl(), cacheTelegram.buscarToken(parametroEntrada.getNomeGrupo()));
 
         RestTemplate request = new RestTemplate();
 
@@ -33,25 +49,26 @@ public class ChatService {
         return response.getBody();
     }
 
-    public Object sendMessage() {
+    public Object sendMessage(ParametroEntrada parametroEntrada) throws Exception {
 
-        String url = String.format("%s%s/sendMessage", properties.getUrl(), cacheTelegram.buscarToken());
+        Integracao integracao = integracaoDaoJpa.findByNomeGrupo(parametroEntrada.getNomeGrupo()).orElse(null);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (Objects.isNull(integracao)) {
+            throw new Exception("Erro na busca da integração");
+        }
 
-        String json = "{ \"chat_id\": -1001670387445, \"text\": \"testeeeeeeeeeeeeeeeeee \"}";
+        StringBuilder sb = new StringBuilder();
+            sb.append(parametroEntrada.getTitulo());
+            sb.append("\n\n");
+            sb.append(parametroEntrada.getMensagem());
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(json, headers);
+        SendMessage sendMessage = SendMessage.builder()
+                                             .chatId(integracao.getChatId())
+                                             .mensagem(sb.toString())
+                                             .build();
 
-        RestTemplate request = new RestTemplate();
+        ResponseEntity<String> response = telegramRotas.sendMessage(sendMessage);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-
-        ResponseEntity<String> response = request.exchange(builder.toUriString()
-                                                         , HttpMethod.POST
-                                                         , httpEntity
-                                                         , String.class);
         return response.getBody();
     }
 }

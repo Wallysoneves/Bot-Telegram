@@ -1,6 +1,6 @@
-package br.com.pessoal.aprendizado.config.cache;
+package br.com.pessoal.bot.config.cache;
 
-import br.com.pessoal.aprendizado.model.dto.Properties;
+import br.com.pessoal.bot.repository.IntegracaoDaoJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Configuration;
@@ -16,18 +16,18 @@ public class CacheTelegram {
     private CacheManager cacheManager;
 
     @Autowired
-    private Properties properties;
+    private IntegracaoDaoJpa integracaoDaoJpa;
 
-    @Scheduled(fixedRate = 3600000) //1
+    @Scheduled(fixedRate = 3600000) // 1 hora
     public void atualizarCache () {
 
         cacheManager.getCacheNames().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
     }
 
     @Cacheable("token")
-    public String buscarToken() {
+    public String buscarToken(String nomeGrupo) {
 
-        return properties.getToken();
+        return integracaoDaoJpa.buscarToken(nomeGrupo);
     }
 
 }

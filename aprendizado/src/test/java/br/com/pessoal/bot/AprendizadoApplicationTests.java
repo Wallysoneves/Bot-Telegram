@@ -1,4 +1,4 @@
-package br.com.pessoal.aprendizado;
+package br.com.pessoal.bot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

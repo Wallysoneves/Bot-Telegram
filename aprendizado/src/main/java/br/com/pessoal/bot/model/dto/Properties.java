@@ -1,4 +1,4 @@
-package br.com.pessoal.aprendizado.model.dto;
+package br.com.pessoal.bot.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,8 +16,6 @@ import java.io.Serializable;
 public class Properties implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private String token;
 
     private String url;
 }
