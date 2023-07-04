@@ -36,16 +36,10 @@ public class ChatService {
     @Autowired
     private IntegracaoDaoJpa integracaoDaoJpa;
 
-    public Object getUpdate(ParametroEntrada parametroEntrada) {
+    public Object getUpdate(Long offset) {
 
-        String url = String.format("%s%s/getUpdates", properties.getUrl(), cacheTelegram.buscarToken(parametroEntrada.getNomeGrupo()));
+        ResponseEntity<String> response = telegramRotas.getUpdates(offset);
 
-        RestTemplate request = new RestTemplate();
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                                        .queryParam("offset", 100);
-
-        ResponseEntity<String> response = request.exchange(builder.toUriString(), HttpMethod.POST, null, String.class);
         return response.getBody();
     }
 

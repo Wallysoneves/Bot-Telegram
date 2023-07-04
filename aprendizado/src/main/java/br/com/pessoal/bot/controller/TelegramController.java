@@ -14,9 +14,9 @@ public class TelegramController {
     private ChatService chatService;
 
     @GetMapping("/getUpdate")
-    public ResponseEntity<?> getUpdate(ParametroEntrada parametroEntrada) {
+    public ResponseEntity<?> getUpdate(@RequestParam Long offset) {
 
-        return ResponseEntity.ok(chatService.getUpdate(parametroEntrada));
+        return ResponseEntity.ok(chatService.getUpdate(offset));
     }
 
     @RequestMapping(value = "/sendMessage", method = RequestMethod.POST)
